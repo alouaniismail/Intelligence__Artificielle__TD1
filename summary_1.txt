@@ -1,0 +1,72 @@
+1. Exploration d'arbres... sur feuilles
+
+a->Le facteur de branchement correspond au max des coups possibles dans une instance de jeu et le min dans une autre instance qui en découle ou bien dint c'est l'origine. Donc c'est compris entre 1 et 3 ici.
+
+b->Les valeurs aux feuilles sont les estimations heuristiques du point de vue ami donc le meilleur plateau pour ami est là où se trouve 8 est pour ennemi là ou se trouve -4 (l'opposé car ENNEMI).
+
+c->Deux noeuds de l'arbre aient un seul fils c'est à dire AMI doit pas faire de choix, il existe une seule possiblitée=>défavorabe pour AMI.
+
+d->AMI:MAX ; ENNEMI:MIN.
+MiniMax sur cet arbre donne la valeur 1 à la racine c'est à dire le joueur AMI doit jouer sur la branche menant vers 1 pour gagner. 
+
+e->L'algorithme alpha-bêta:
+Si on prend ??=3, on va faire un élagage au niveau de la feuille portant l'heuristique 8.
+Justification:
+au niveau de 3 et 5, on déduit que: bêta=3 puis cela remonte: alpha=3 et puisque la valeur minimale dans l'autre est 3 (?? choisie comme égale à 3), la bleau vérifie: alpha=3>=bêta=min(3,8) donc élagage de la branche menant vers 8. C'est la plus grande valeur.
+Dorénavent, elle est égale à 3 pour la suite. 
+
+f->Déroulement d'alpha-bêta avec la valeur 3 précédente:
+(on doit voir énormément de vidéos sur minimax aussi pour répondre efficacement à cette question)
+Réponse:
+
+Parcours en profondeur:(BTS) --élagage(pruning)
+
+On répondra aux 2 questions à la fois:
+
+
+Facile. (voir les vidéos correspondantes)
+1/
+->
+3 remonte => bêta=3 puis alpha=3 on remarque que <=3 dans l'autre branche on élage.
+le noeud bleu porte la valeur: alpha=3 et bêta=3 dans son fils.(*)
+
+bêta devient 3 en remontant.
+1 remonte=>bêta devient 1 puis alpha devient 1 alpha < +infini (pas de remontée) => pas d'élagage.
+ce qui conduit à: bêta qui devient +infini dans la foulée et alpha=3 reste.
+
+	***on a bêta=+infini dans l'autre côté et le noeud grand-père porte l'information: alpha=3. 
+dernier côté: bêta devient 4 puis le max => alpha devient 4 >= 3=bêta. => élagage de la suite: -2 1. On a désormais les données précédentes à mémoriser soit au niveau du grand-père: alpha=3 et bêta=+infini. Donc: alpha=3 et bêta=+infini.(ATTENTION)
+
+	***On remonte les valeurs: alpha=3 et bêta=+infini s'assurant que: alpha<bêta. -4 remonte 0 gagne => alpha=0 =>bêta=0 avec alpha=3 >= 0 donc élagage de 4 0 et les nouvelles valeurs d'après ce qui précède (ATTENTION): alpha=3 et bêta=+infini. -4 devient alpha après 2 remontées puis bêta avec alpha=3, on trouve que alpha<bêta pas d'élagage donc on conserve les valeurs précédentes: soit:
+	alpha=3 et bêta=+infini.
+Voilà.(d'où l'objet de la question2(suivante))
+
+2/
+On a élagé presque 2 groupement de frères, on peut jouer sur l'arbre permettant des valeurs farfelues de alpha et bêta soit un élagage avancé et des coupes possibles en trop. Voilà.
+
+Fin_exo1.
+[algo de Minimax]
+{algo de alpha_bêta appelé communément l'élagage alpha-bêta}
+
+---------------------------------------------------------------------------------------------------
+
+2. Stratégies gagnantes au Morpion:
+
+Remarque:
+https://www.youtube.com/watch?v=KS2QkHe-hpE (important: procédure à suivre pendant l'exam)
+->
+Depuis la racine, -inf,+inf.
+on descend en profondeur tout a gauche, c'est le niveau MAX ; on 6 et 11 6 va remonter en terme de alpha l'intervalle devient -infini,6. il doit remonter au min 11 ne nous intèresse pas. on a désormais l'intervalle: -inf,6. entre les deux intervalles à la montée. entre les deux suivantes, cela devient: 6,+inf. qui descend de l'autre côté, qui fait remonter par PROFONDEUR 4 au début au MIN => bêta=4 et alpha qu'on a fait descendre est égale à 6 soit alpha > bêta on élage l'autre partie du sous-arbre dominant et on ecrit la valeur dont elle est la cause soit le numéro 4. On garde 6,+infini d'après la remarque précédente qu'on fait monter pour devenir -infini,6 seulement dans ce 'contexte' puis on redescend avec -infini,6 14 monte c'est le seul en MIN=>le nouveau bêta=14 qui devient alpha (plateau MIN arrivée) donc alpha=14>=6 l'ancien alpha on élage ce qui reste, le 14 prédomine sur la pseudo-racine correspondante comme avant, puis 6 dans la remontée 'globale' car élagage ; on présèrve les valeurs précédentes comme on a dit avant(2). On remonte à la racine avec 6,+infini cette fois(c'est son tour cette intervalle complémentaire) on descend avec jusqu'à 3 où on marque l'intervalle sur l'arc correspondant bien sûr et les résultats d'élagage sur les sommets après avoir supprimé les bonnes choses, on a 3 dans le plateau MIN on doit faire lancer le MAX on remonte son frère le 7 au plateau MAX qui impose alpha=7 correct L'INTERVALLE CHANGE EN 7,+infini 7 se tient sur le père qui l'arc le tenant vers le bas devient 6,7 par non élagage et bêta qui devient 7(plateau ###max mais MIN). On a désormais l'intervalle 6,7. Correct. On descend avec jusqu'au 9 (tjrs tout à gauche), le 9 correspondant va le faire monter ; c'est le seul présent, avec l'intervalle 6,7 alpha devient 9 par remontée encore (jusqu'à la symétrie avec la tenue du 7 les 2 cousins), alpha=9 et bêta=7 donc alpha > bêta implique 9 se tient dans la même position ; on garde les valeurs orécédentes et on fait l'élagage depuis ce qui conduit inversement au nouveau 9. On remonte le min, prochain plateau, ca sera 7, c'est la valeur obtenue à la racine après le déroulement de l'algortihme en question. Conclusion: prendre la deuxième décision qui conduit à 7. Voilà.
+
+FIN_first__PART_IA.(c'est 7 bêta relatif au plateau MAX qui trace dans l'arbre les décisions qui devront être prises pour une victoire anonyme"" certaine...)
+===================================================================== 
+
+
+
+
+
+
+
+
+
+
