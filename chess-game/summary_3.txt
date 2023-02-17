@@ -1,0 +1,43 @@
+3-Du morpion aux échecs:
+------------------------
+Question[1]:
+__________________
+
+
+
+Il n'est pas possible de faire une recherche exhaustive de toutes les parties d'échecs en limitant la profondeur de la recherche, car le nombre de parties possibles augmente exponentiellement avec la profondeur. En effet, il y a environ 20 coups possibles pour un joueur à chaque tour, donc le nombre de parties possibles après n coups est d'environ 20^n.
+
+Ainsi, même avec une profondeur de recherche très faible, le nombre de parties à explorer serait beaucoup trop important pour pouvoir les explorer toutes. Il faudrait donc utiliser des algorithmes de recherche plus sophistiqués, tels que l'élagage alpha-bêta, pour explorer efficacement l'arbre de jeu.
+
+En revanche, on peut mesurer le nombre de noeuds explorés à chaque profondeur pour une durée donnée de 30 secondes, en utilisant une fonction de recherche en profondeur limitée avec une fonction d'évaluation aléatoire, comme suit :
+
+def randomEvaluation(b)
+	return randint(-100,100)
+def searchLimited(b,depth,time_limit):
+	nodes=0
+	if b.is_game_over() or depth==0:
+		return 1,randomEvaluation(b)
+	start_time=time.time()
+	for m in b.legal_moves:
+		b.push(m)
+		nodes_child,score_child=searchLimited(b,depth-1,time_limit)
+		nodes+=nodes_child
+		b.pop()
+		if time.time()-start_time>=time_limit:
+			break
+	return nodes+1,0
+=>AApplication:
+board=chess.Board()
+for depth in range(1,10):
+	nodes,_=searchLimited(board,depth,30)
+	print(f"Profondeur {depth} : {nodes} noeuds")
+=>Plus de détails à apporter essentiellement:
+Cette fonction searchLimited effectue une recherche en profondeur limitée en arrêtant la recherche dès que le temps limite est atteint. Elle utilise une fonction d'évaluation aléatoire pour les feuilles de l'arbre. On peut alors mesurer le nombre de noeuds explorés à chaque profondeur en appelant cette fonction pour chaque profondeur entre 1 et 9.
+
+Question[2]:
+
+______________________
+
+
+
+
